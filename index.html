@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Select Component</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="app">
+    <div @click="showHide = !showHide" class="select">
+        <span>Select</span>
+        <i class="fas fa-angle-down"></i>
+    </div>
+    <div v-if="showHide" class="menu">
+        <input autocomplete="off" id="search" @keyup="search" placeholder="Search.." type="text">
+        <ul>
+           <li class="data" v-for="(car, index) in cars">
+               <label :for="car" @click="toggleItem(index)" >{{ car }} </label>
+               <input :id="car" type="checkbox">
+           </li>
+        </ul>
+    </div>
+    <div v-if="selectedCars.length > 0" class="result">
+        <h5>Selected Values</h5>
+        <span v-for="selected in selectedCars">{{selected}}</span>
+    </div>
+</div>
+
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            cars: ["Volvo", "BMW", "Ford", "Mazda", "Mercedes", "Lada", "Toyota", "Nissan"],
+            selectedCars: [],
+            showHide: false
+        },
+        methods: {
+            toggleItem(index) {
+                if (!this.selectedCars.includes(this.cars[index])) {
+                    this.selectedCars.push(this.cars[index])
+                }else {
+                    var remove = this.selectedCars.indexOf(this.cars[index])
+                    this.selectedCars.splice(remove,1)
+                }
+            },
+            search() {
+                var filter = document.querySelector('#search').value.toUpperCase();
+                var allCars = document.getElementsByTagName('li')
+                for (var i = 0; i < allCars.length; i++) {
+                    var text = allCars[i].textContent || allCars[i].innerText;
+                    if (text.toUpperCase().indexOf(filter) > -1) {
+                        allCars[i].style.display = "";
+                    } else {
+                        allCars[i].style.display = "none";
+                    }
+                }
+            }
+        }
+    })
+</script>
+</body>
+</html>
